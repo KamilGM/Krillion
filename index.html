@@ -2796,26 +2796,7 @@
         run.phase = "reading";
         run.attempts = 0;
         const q = run.questions[run.index];
-        app.innerHTML = `<section class="play"><div class="dive-stage">${hud()}<div class="question-card pixel-panel"><div class="eyebrow">PROMPT ${run.index + 1} OF ${run.questions.length}</div><h2 class="prompt">${esc(q.prompt)}</h2><small>▼ rarer answers sink deeper ▼</small></div><div id="countdown" class="countdown-panel pixel-panel">descending · the clock starts in <b id="readCount">3</b></div><div class="play-controls" id="playControls" hidden><form id="answerForm"><div class="input-row"><div class="clock" id="clock" aria-label="Seconds remaining">${run.seconds}</div><input id="guess" class="answer-input" list="answerOptions" autocomplete="off" spellcheck="false" maxlength="150" aria-label="Your answer" placeholder="type one answer…" disabled><datalist id="answerOptions"></datalist><button class="pink" id="submitAnswer" type="submit">DIVE</button></div><div class="progress"><i id="bar"></i></div><p class="inline-error" id="answerError" role="status" aria-live="polite"></p><div class="below-input"><small>Invalid answers? Keep trying until time runs out.</small><button type="button" id="skip">skip round →</button></div></form></div></div></section>`;
-        const suggestions = [...new Set(q.answers.flatMap((a) => [a.text, ...a.aliases]))].map(
-          (answer) => ({ answer, normalized: normalize(answer) }),
-        );
-        $("#guess").oninput = () => {
-          const typed = normalize($("#guess").value),
-            matches = suggestions
-              .filter((item) => !typed || item.normalized.includes(typed))
-              .slice(0, 20);
-          if (typed && matches.length < 20) {
-            for (const item of suggestions) {
-              if (matches.length === 20) break;
-              if (!matches.includes(item) && oneOff(typed, item.normalized)) matches.push(item);
-            }
-          }
-          $("#answerOptions").innerHTML = matches
-            .map((item) => `<option value="${esc(item.answer)}"></option>`)
-            .join("");
-        };
-        $("#guess").dispatchEvent(new Event("input"));
+        app.innerHTML = `<section class="play"><div class="dive-stage">${hud()}<div class="question-card pixel-panel"><div class="eyebrow">PROMPT ${run.index + 1} OF ${run.questions.length}</div><h2 class="prompt">${esc(q.prompt)}</h2><small>▼ rarer answers sink deeper ▼</small></div><div id="countdown" class="countdown-panel pixel-panel">descending · the clock starts in <b id="readCount">3</b></div><div class="play-controls" id="playControls" hidden><form id="answerForm"><div class="input-row"><div class="clock" id="clock" aria-label="Seconds remaining">${run.seconds}</div><input id="guess" class="answer-input" autocomplete="off" spellcheck="false" maxlength="150" aria-label="Your answer" placeholder="type one answer…" disabled><button class="pink" id="submitAnswer" type="submit">DIVE</button></div><div class="progress"><i id="bar"></i></div><p class="inline-error" id="answerError" role="status" aria-live="polite"></p><div class="below-input"><small>Invalid answers? Keep trying until time runs out.</small><button type="button" id="skip">skip round →</button></div></form></div></div></section>`;
         $("#answerForm").onsubmit = (e) => {
           e.preventDefault();
           submit();
